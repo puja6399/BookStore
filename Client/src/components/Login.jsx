@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {Link, useNavigate, useLocation} from 'react-router-dom'
 import { ToastContainer, toast } from "react-toastify";
+import loadingForm from '../assets/loadingForm.gif';
 import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
@@ -14,6 +15,7 @@ const Login = () => {
   }
   const navigate = useNavigate();
   const [logindata, setLogindata] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -25,6 +27,7 @@ const Login = () => {
     const { email, password } = logindata;
     if (email && password) {
       try {
+        setLoading(true);
         const response = await fetch("https://bookstore-nl9p.onrender.com/user/login", {
           method: "POST",
           headers: {
@@ -58,6 +61,9 @@ const Login = () => {
       } catch (err) {
         alert(err);
       }
+      finally{
+        setLoading(false);
+      }
     } else {
       alert("Please fill all details");
     }
@@ -83,9 +89,9 @@ const Login = () => {
           value={logindata.password}
           onChange={handleChange}
         />
-        <button className="submit-btn" type="submit" onClick={handleSubmit}>
+        {loading ===false ? <button className="submit-btn" type="submit" onClick={handleSubmit}>
           Submit
-        </button>
+        </button> : <img src={loadingForm}></img> }
         <h3> <span>OR</span> <Link to="/Signup">Sign Up</Link></h3>
         <h3 className="h3lfP"><Link to="/passwordChange">Forgot Password?</Link></h3>
       </div>
